@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,10 @@ builder.Services.AddControllers(setupAction =>
     setupAction.ReturnHttpNotAcceptable = true;
 })
   .AddXmlDataContractSerializerFormatters()
+  .AddNewtonsoftJson(setupAction =>
+  {
+      setupAction.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+  })
   .ConfigureApiBehaviorOptions(setupAction =>
   {
       setupAction.InvalidModelStateResponseFactory = context =>

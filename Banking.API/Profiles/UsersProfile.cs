@@ -18,6 +18,7 @@ namespace Banking.API.Profiles
 
             CreateMap<Models.UsersCreateRepo, Entities.Users>();
             CreateMap<Models.UsersUpdateDto, Entities.Users>();
+            CreateMap<Entities.Users, Models.UsersUpdateDto>();
 
         }
     }
