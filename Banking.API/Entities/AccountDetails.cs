@@ -12,8 +12,9 @@ namespace Banking.API.Entities
         public string? AccountNumber { get; set; }
         [Required]
         public AccountType Account { get; set; }
-        public ICollection<Users> Users { get; set; }
-          = new List<Users>();
+        public Guid Userid { get; set; }
+
+        public Users? Users { get; set; }
 
 
     }

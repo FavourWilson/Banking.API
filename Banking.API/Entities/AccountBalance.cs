@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Banking.API.Entities
 {
@@ -7,15 +8,14 @@ namespace Banking.API.Entities
         [Key]
         public Guid Id { get; set; }
        
-        [Required]
         public decimal Deposit { get; set; }
-        [Required]
         public decimal Withdrawal { get; set; }
-        [Required]
         public decimal TotalBalance { get; set; }
         public DateTimeOffset DateOftransaction { get; set; }
 
-        public ICollection<AccountDetails> accountDetails { get; set; }
-        = new List<AccountDetails>();
+        public Guid AccountDetailID { get; set; }
+        public AccountDetails? AccountDetails { get; set; }
+
+
     }
 }

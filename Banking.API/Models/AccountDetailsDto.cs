@@ -6,7 +6,8 @@ namespace Banking.API.Models
     {
         public string? AccountNumber { get; set; }
         public AccountType Account { get; set; }
-        public ICollection<Users> Users { get; set; }
-         = new List<Users>();
+        public Guid Userid { get; set; }
+
+        public Users? Users { get; set; }
     }
 }

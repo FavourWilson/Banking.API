@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Banking.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class AcountDetailsController : ControllerBase
     {
@@ -21,7 +21,7 @@ namespace Banking.API.Controllers
 
          }
 
-        [HttpPost]
+        [HttpPost("userdetails")]
         public ActionResult<AccountDetailsDto> CreateAccountDetails(AccountDetailsCreateRepo createRep)
         {
             var AcctDetailsEntity = _mapper.Map<Entities.AccountDetails>(createRep);

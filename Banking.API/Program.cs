@@ -1,15 +1,38 @@
 using Banking.API.DbContexts;
+using Banking.API.JwtFeatures;
 using Banking.API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
+using System.Configuration;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddAuthentication(opt =>
+{
+    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+       
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["ApplicationSettings:JWT_Secret"].ToString()))
+    };
+});
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -57,21 +80,47 @@ builder.Services.AddControllers(setupAction =>
       };
   });
 builder.Services.AddScoped<AccountRepository, AccountRepository>();
+builder.Services.AddScoped<JwtHandler>();
+builder.Services.AddIdentity<Banking.API.Entities.RegisterUser, IdentityRole>(
+    options =>
+    {
+        options.Password.RequireDigit = false;
+        options.Password.RequireLowercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+        
+    })
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddCors();
 var app = builder.Build();
 // Configure the HTTP request pipeline.
+app.Use(async (ctx, next) =>
+{
+    await next();
+    if(ctx.Response.StatusCode == 204)
+    {
+        ctx.Response.ContentLength = 0;
+    }
+});
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+app.UseCors(builder => builder.WithOrigins("ApplicationSettings:Client_Url")
+.AllowAnyHeader()
+.AllowAnyOrigin());
+
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+app.UseAuthentication();
+
+app.UseAuthorization(); 
 
 app.MapControllers();
 

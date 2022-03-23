@@ -7,6 +7,7 @@ namespace Banking.API.Profiles
         public AccountBalProfile()
         {
             CreateMap<Entities.AccountBalance, Models.AccountBalDto>();
+                
             CreateMap<Models.AccountBalCreateRepo, Entities.AccountBalance>();
         }
     }

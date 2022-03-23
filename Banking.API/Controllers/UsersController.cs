@@ -21,7 +21,7 @@ namespace Banking.API.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(_mapper));
         }
         [HttpPost]
-        public ActionResult<UsersDto> CreateUsers(UsersCreateRepo user)
+        public  ActionResult<UsersDto> CreateUsers(UsersCreateRepo user)
         {
             var userEntity = _mapper.Map<Entities.Users>(user);
             _accountRepository.AddUsers(userEntity);
@@ -31,7 +31,7 @@ namespace Banking.API.Controllers
             return CreatedAtRoute("Getuser", new { userId = userReturn.Id }, userReturn);
         }
 
-        [HttpGet(Name = "Getuser")]
+        [HttpGet("id", Name = "Getuser")]
         public IActionResult GetUser(Guid userId)
         {
             var userFromRepo = _accountRepository.GetUser(userId);
@@ -43,18 +43,14 @@ namespace Banking.API.Controllers
             return Ok(_mapper.Map<UsersDto>(userFromRepo));
         }
 
-        [HttpGet("{GetAllUsers}")]
+        [HttpGet("AllUsers")]
         public ActionResult<IEnumerable<UsersDto>> GetAllUser()
         {
             var usersAll = _accountRepository.Users();
-            if(usersAll == null)
-            {
-                throw new ArgumentNullException(nameof(usersAll));
-            }
             return Ok(_mapper.Map<IEnumerable<UsersDto>>(usersAll));
         }
 
-        [HttpPut("{userid}")]
+        [HttpPut("userid")]
         public IActionResult UpdateUsers(Guid userId, UsersUpdateDto updateDto)
         {
             if(!_accountRepository.UsersExits(userId))

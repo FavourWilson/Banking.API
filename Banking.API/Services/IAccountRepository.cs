@@ -6,14 +6,14 @@ namespace Banking.API.Services
     {
         IEnumerable<AccountBalance> GetBalance();
         void AddBalance (AccountBalance accountBalance);
-        void UpdateBalance (Guid accountBalId, AccountBalance accountBalance);
+        void UpdateBalance (AccountBalance accountBalance);
         AccountBalance GetBalance(string acctNumber);
 
 
 
         IEnumerable<AccountDetails> GetAccountDetails();
         void AddAccountDetails(AccountDetails accountDetails);
-        void UpdateAccountDetails(Guid accountId, AccountDetails accountDetails);
+        void UpdateAccountDetails(AccountDetails accountDetails);
         void DeleteAccountDetails(Guid accountId);
         AccountDetails GetAccountDetail(string acctnumber);
 
@@ -25,7 +25,11 @@ namespace Banking.API.Services
         void DeleteUsers(Guid usersId);
         Users GetUser(Guid userId);
 
-        bool AccountBalanceExits(Guid accountBalId);
+
+        RegisterUser GetRegisterUser(string registerId);
+        
+
+        bool AccountBalanceExits(string acctNumber);
         bool AccountDetailsExits(Guid accountId);
         bool UsersExits(Guid userId);
         bool save();

@@ -13,7 +13,8 @@ namespace Banking.API.Models
         public decimal TotalBalance { get; set; }
         public DateTimeOffset DateOftransaction { get; set; }
 
-        public ICollection<AccountDetails> accountDetails { get; set; }
-        = new List<AccountDetails>();
+        public Guid AccountDetailID { get; set; }
+
+        public AccountDetails? AccountDetails { get; set; }
     }
 }

@@ -19,15 +19,9 @@ namespace Banking.API.Models
         public string? NextOfKin { get; set; }
         [Required]
         public string? Phonenumber { get; set; }
-        [Required]
-        public string? EmailAddress { get; set; }
 
-        [Required]
-        [MinLength(8)]
-        public string? Username { get; set; }
+        public Guid RegisterId { get; set; }
 
-        [Required]
-        [MinLength(8)]
-        public string? Password { get; set; }
     }
+        
 }

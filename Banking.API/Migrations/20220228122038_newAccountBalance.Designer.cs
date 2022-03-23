@@ -4,6 +4,7 @@ using Banking.API.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Banking.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220228122038_newAccountBalance")]
+    partial class newAccountBalance
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,7 +143,6 @@ namespace Banking.API.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -195,15 +196,7 @@ namespace Banking.API.Migrations
                         .HasMaxLength(11)
                         .HasColumnType("nvarchar(11)");
 
-                    b.Property<Guid>("RegisterId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("registerUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("registerUserId");
 
                     b.ToTable("User");
                 });
@@ -357,15 +350,6 @@ namespace Banking.API.Migrations
                         .HasForeignKey("UsersId");
 
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("Banking.API.Entities.Users", b =>
-                {
-                    b.HasOne("Banking.API.Entities.RegisterUser", "registerUser")
-                        .WithMany()
-                        .HasForeignKey("registerUserId");
-
-                    b.Navigation("registerUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

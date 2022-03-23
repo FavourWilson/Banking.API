@@ -4,9 +4,10 @@ namespace Banking.API.Models
 {
     public class AccountDetailsCreateRepo
     {
+        public Guid Userid { get; set; }
+
         public string? AccountNumber { get; set; }
         public AccountType Account { get; set; }
-        public ICollection<Users> Users { get; set; }
-         = new List<Users>();
+
     }
 }

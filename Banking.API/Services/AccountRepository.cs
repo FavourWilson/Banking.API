@@ -37,48 +37,35 @@ namespace Banking.API.Services
             {
                 throw new ArgumentNullException(nameof(accountDetails));
             }
-
             accountDetails.Id = Guid.NewGuid();
             accountDetails.AccountNumber = AcctNumber;
 
-            foreach (var users  in accountDetails.Users)
-            {
-                users.Id = Guid.NewGuid();
-            }
+
 
             _context.accountDetails.Add(accountDetails);
         }
 
         public void AddBalance(AccountBalance accountBalance)
         {
-            if(accountBalance == null)
+            if (accountBalance == null)
             {
                 throw new ArgumentNullException(nameof(accountBalance));
             }
             accountBalance.Id = Guid.NewGuid();
-            accountBalance.Withdrawal = 0;
-            accountBalance.Deposit = 0;
-            accountBalance.TotalBalance = accountBalance.Withdrawal - accountBalance.Deposit;
+            accountBalance.TotalBalance = accountBalance.Deposit - accountBalance.Withdrawal;
+            _context.accountBalance.Add(accountBalance);
 
-            foreach (var acctDetails in accountBalance.accountDetails)
-            {
-                acctDetails.Id = Guid.NewGuid();
-                foreach (var users in acctDetails.Users)
-                {
-                    users.Id = Guid.NewGuid();
-                }
-                
-            }
+
         }
 
         public void AddUsers(Users users)
         {
-            if(users == null)
+            if (users == null)
             {
                 throw new ArgumentNullException(nameof(users));
             }
 
-            _context.Users.Add(users);
+            _context.User.Add(users);
         }
 
         public void DeleteAccountDetails(Guid accountId)
@@ -105,7 +92,7 @@ namespace Banking.API.Services
             }
         }
 
-        
+
 
         public IEnumerable<AccountDetails> GetAccountDetails()
         {
@@ -119,20 +106,20 @@ namespace Banking.API.Services
 
         public AccountBalance GetBalance(string acctNumber)
         {
-            if(acctNumber == null)
+            if (acctNumber == null)
             {
                 throw new ArgumentNullException(nameof(acctNumber));
             }
 
 #pragma warning disable CS8603 // Possible null reference return.
-            return GetBalance().FirstOrDefault(n => n.accountDetails.Any(a => a.AccountNumber == acctNumber));
+            return GetBalance().FirstOrDefault();
 #pragma warning restore CS8603 // Possible null reference return.
         }
 
         public Users GetUsers(Guid userId)
         {
 #pragma warning disable CS8603 // Possible null reference return.
-            return _context.Users.FirstOrDefault(n => n.Id == userId);
+            return _context.User.FirstOrDefault(n => n.Id == userId);
 #pragma warning restore CS8603 // Possible null reference return.
         }
 
@@ -141,12 +128,12 @@ namespace Banking.API.Services
             return (_context.SaveChanges() >= 0);
         }
 
-        public void UpdateAccountDetails(Guid accountId, AccountDetails accountDetails)
+        public void UpdateAccountDetails(AccountDetails accountDetails)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateBalance(Guid accountBalId, AccountBalance accountBalance)
+        public void UpdateBalance(AccountBalance accountBalance)
         {
             throw new NotImplementedException();
         }
@@ -158,7 +145,7 @@ namespace Banking.API.Services
 
         public IEnumerable<Users> Users()
         {
-            return _context.Users.ToList();
+            return _context.User.ToList();
         }
 
         public bool UsersExits(Guid userId)
@@ -174,7 +161,7 @@ namespace Banking.API.Services
             }
 
 #pragma warning disable CS8603 // Possible null reference return.
-            return _context.Users.FirstOrDefault(a => a.Id == userId);
+            return _context.User.FirstOrDefault(a => a.Id == userId);
 #pragma warning restore CS8603 // Possible null reference return.
         }
 
@@ -184,5 +171,20 @@ namespace Banking.API.Services
             return GetAccountDetails().FirstOrDefault(n => n.AccountNumber == acctnumber);
 #pragma warning restore CS8603 // Possible null reference return.
         }
+
+        public bool AccountBalanceExits(string acctNumber)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            return _context.accountBalance.Any(e => e.AccountDetails.AccountNumber == acctNumber);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
+        public RegisterUser GetRegisterUser(string registerId)
+        {
+#pragma warning disable CS8603 // Possible null reference return.
+            return _context.registerUsers.FirstOrDefault(n => n.Id == registerId);
+#pragma warning restore CS8603 // Possible null reference return.
+        }
     }
 }
+    
